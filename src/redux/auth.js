@@ -6,6 +6,10 @@ export const authSetUsername = data => ({
   data,
 });
 
+export const cleanAuth = () => ({
+  type: AUTH_CLEAN,
+});
+
 const initialState = {
   username: '',
 };
@@ -20,7 +24,6 @@ export default (_state = initialState, action = {}) => {
       break;
     case AUTH_CLEAN:
       state.username = '';
-      state.token = '';
       break;
     default:
       break;

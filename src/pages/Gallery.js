@@ -2,21 +2,20 @@ import React, { Component } from 'react';
 import {
   Dimensions,
   View,
-  Text,
-  Platform,
-  Image,
 } from 'react-native';
 
 import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Swiper from 'react-native-deck-swiper';
-import {Spinner} from 'react-native-loading-spinner-overlay';
 import { Actions } from 'react-native-router-flux';
 
+import * as imagesActions from '../redux/images';
+import * as authActions from '../redux/auth';
+
 import Header from '../components/Header';
+import Card from '../components/Card';
 
 const displayWidth = Dimensions.get('window').width;
-const displayHeight = Dimensions.get('window').height;
 
 const styles = EStyleSheet.create({
   mainContainer: {
@@ -46,19 +45,6 @@ const styles = EStyleSheet.create({
     fontSize: 15,
     color: 'white',
   },
-  card: {
-    flex: 1,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: '#E8E8E8',
-    justifyContent: 'center',
-    backgroundColor: 'green',
-  },
-  text: {
-    textAlign: 'center',
-    fontSize: 50,
-    backgroundColor: 'transparent',
-  },
 });
 
 EStyleSheet.build();
@@ -70,57 +56,76 @@ class Gallery extends Component {
     };
   }
 
+  openListApprovedImages = () => {
+    this.props.dispatch(imagesActions.cleanListImages());
+    Actions.approvelist();
+  }
+
+  logOut = () => {
+    this.props.dispatch(imagesActions.cleanImages());
+    this.props.dispatch(authActions.cleanAuth());
+    Actions.pop();
+  }
+
   render() {
+    const { images } = this.props;
     return (
       <View style={styles.mainContainer}>
         <Swiper
-          cardVerticalMargin={80}
-          cards={['DO', 'MORE', 'OF', 'WHAT', 'MAKES', 'YOU', 'HAPPY']}
+          marginTop={80}
+          cards={images}
           renderCard={(card) => {
             return (
-              <View style={styles.card}>
-                <Text style={styles.text}>{card}</Text>
-              </View>
-            )
+              <Card
+                card={(card) && card.data}
+              />
+            );
           }}
           overlayLabels={{
-            // bottom: {
-            //   title: 'BLEAH',
-            //   swipeColor: '#9262C2',
-            //   backgroundOpacity: '0.75',
-            //   fontColor: '#FFF'
-            // },
             left: {
-              title: 'NOPE',
+              title: 'Nope',
               swipeColor: '#FF6C6C',
               backgroundOpacity: '0.75',
               fontColor: '#FFF',
             },
             right: {
-              title: 'LIKE',
+              title: 'Like',
               swipeColor: '#4CCC93',
               backgroundOpacity: '0.75',
               fontColor: '#FFF',
             },
-            // top: {
-            //   title: 'SUPER LIKE',
-            //   swipeColor: '#4EB8B7',
-            //   backgroundOpacity: '0.75',
-            //   fontColor: '#FFF'
-            // }
           }}
-          onSwiped={(cardIndex) => {console.log(cardIndex)}}
-          onSwipedAll={() => {console.log('onSwipedAll')}}
+          onSwipedAll={() => Actions.approvelist()}
           cardIndex={0}
           backgroundColor={'white'}
-          animateOverlayLabelsOpacity
-          animateCardOpacity
+          onSwipedRight={(cardIndex) => {
+            this.props.dispatch(imagesActions.setApprovedImage(images[cardIndex]));
+          }}
+          onSwipedLeft={(cardIndex) => {
+            this.props.dispatch(imagesActions.setDisapprovedImage(images[cardIndex]));
+          }}
+          disableTopSwipe
+          disableBottomSwipe
         >
         </Swiper>
-        <View style={{ width: displayWidth, height: 50, backgroundColor: 'blue', position: 'absolute', top: 0, left: 0 }}/>
+        <Header
+          absolute
+          openListApprovedImages={this.openListApprovedImages}
+          logOut={this.logOut}
+        />
       </View>
     );
   }
 }
+Gallery.defaultProps = {
+  images: [],
+  dispatch: () => {},
+};
 
-export default connect()(Gallery);
+Gallery.propTypes = {
+  images: React.PropTypes.arrayOf(React.PropTypes.object),
+  dispatch: () => {},
+};
+export default connect(state => ({
+  images: state.images.images,
+}))(Gallery);

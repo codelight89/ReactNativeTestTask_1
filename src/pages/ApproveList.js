@@ -1,0 +1,121 @@
+import React, { Component } from 'react';
+import {
+  Dimensions,
+  View,
+  Text,
+  ListView,
+  Image,
+  StyleSheet,
+} from 'react-native';
+
+import { connect } from 'react-redux';
+import EStyleSheet from 'react-native-extended-stylesheet';
+import { Actions } from 'react-native-router-flux';
+import Header from '../components/Header';
+
+const displayWidth = Dimensions.get('window').width;
+const dislikeIcon = require('../resources/dislike_icon.png');
+const likeIcon = require('../resources/like_icon.png');
+
+const styles = EStyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cell: {
+    width: displayWidth,
+    height: 51,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+  },
+  image: {
+    width: 50,
+    height: 50,
+  },
+  text: {
+    width: displayWidth - 80,
+    marginLeft: 5,
+    fontSize: 12,
+    color: 'black',
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+  },
+  textLikesContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+});
+
+EStyleSheet.build();
+
+class ApproveList extends Component {
+  constructor() {
+    super();
+    this.state = {
+    };
+  }
+
+  renderRows = (rowData, sectionId, rowId) => {
+    return (
+      <View style={styles.cell}>
+        <Image
+          style={styles.image}
+          source={{ uri: rowData.data.thumbnail }}
+          resizeMode="contain"
+        />
+        <View style={styles.textLikesContainer}>
+          <Text style={styles.text} lineBreakMode="tail" numberOfLines={1}>{rowData.data.title}</Text>
+          <Image
+            source={(rowId > this.props.approvedImages.length - 1) ? dislikeIcon : likeIcon}
+            style={styles.icon}
+            resizeMode="contain"
+          />
+        </View>
+      </View>
+    );
+  }
+
+  goBack = () => {
+    Actions.pop();
+  }
+
+  render() {
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    const { approvedImages, disapprovedImages } = this.props;
+    return (
+      <View style={styles.mainContainer}>
+        <Header
+          rightAction={this.goBack}
+        />
+        <ListView
+          style={styles.listView}
+          dataSource={ds.cloneWithRows((approvedImages.length > 0 || disapprovedImages.length > 0) ? approvedImages.concat(disapprovedImages) : [])}
+          renderRow={this.renderRows}
+          enableEmptySections
+        />
+      </View>
+    );
+  }
+}
+
+ApproveList.defaultProps = {
+  approvedImages: [],
+  disapprovedImages: [],
+};
+
+ApproveList.propTypes = {
+  approvedImages: React.PropTypes.arrayOf(React.PropTypes.object),
+  disapprovedImages: React.PropTypes.arrayOf(React.PropTypes.object),
+};
+
+export default connect(state => ({
+  approvedImages: state.images.approvedImages,
+  disapprovedImages: state.images.disapprovedImages,
+}))(ApproveList);

@@ -15,7 +15,10 @@ import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Actions } from 'react-native-router-flux';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 import * as auth from '../redux/auth';
+import * as images from '../redux/sagas/images/images';
 
 const displayWidth = Dimensions.get('window').width;
 
@@ -55,23 +58,33 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      visibleSpinner: false,
-      username: '',
-      password: '',
+      loading: false,
+      username: 'Test',
+      password: 'password',
     };
   }
 
   logInButtonPress = () => {
+    this.setState({ loading: true });
     const { username, password } = this.state;
     if (username.length > 0 && password.length > 0) {
       if (password === 'password') {
         this.props.dispatch(auth.authSetUsername(username));
-        Actions.gallery();
+        this.props.dispatch(images.apiGetImages((success) => {
+          if (success) {
+            this.setState({ loading: false });
+            Actions.gallery();
+          }
+        }));
       } else {
-        this.showMessageAlert('Your password is invalid');
+        this.setState({ loading: false }, () => {
+          this.showMessageAlert('Your password is invalid');
+        });
       }
     } else {
-      this.showMessageAlert('Please fill all fields');
+      this.setState({ loading: false }, () => {
+        this.showMessageAlert('Please fill all fields');
+      });
     }
   }
 
@@ -87,6 +100,7 @@ class Login extends Component {
         onPress={() => Keyboard.dismiss()}
       >
         <View style={styles.mainContainer}>
+          <Spinner visible={this.state.loading} overlayColor={'transparent'} color={'gray'} />
           <View>
             <TextInput
               style={styles.textInput}
@@ -101,7 +115,7 @@ class Login extends Component {
               placeholder={'Password'}
               underlineColorAndroid={'#00000000'}
               secureTextEntry
-              onChangeText={(text) => this.setState({ password: text })}
+              onChangeText={text => this.setState({ password: text })}
               placeholderTextColor={'black'}
               value={this.state.password}
             />
@@ -112,10 +126,18 @@ class Login extends Component {
           >
             <Text style={styles.buttonTitle}>Log In</Text>
           </TouchableOpacity>
-          <KeyboardSpacer/>
+          <KeyboardSpacer />
         </View>
       </TouchableWithoutFeedback>
     );
   }
 }
+
+Login.defaultProps = {
+  dispatch: () => {},
+};
+
+Login.propTypes = {
+  dispatch: () => {},
+};
 export default connect()(Login);

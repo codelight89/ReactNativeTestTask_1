@@ -8,6 +8,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { Scene, Router, Actions } from 'react-native-router-flux';
 import Login from '../pages/Login';
 import Gallery from '../pages/Gallery';
+import ApproveList from '../pages/ApproveList';
 
 const styles = EStyleSheet.create({
   container: {
@@ -25,7 +26,8 @@ class Root extends React.Component {
         <Router>
           <Scene key="root" hideNavBar hideTabBar>
             <Scene key="login" component={Login} />
-            <Scene key="gallery" component={Gallery} />
+            <Scene key="gallery" component={Gallery} panHandlers={null} />
+            <Scene key="approvelist" component={ApproveList} panHandlers={null} />
           </Scene>
         </Router>
       </View>
