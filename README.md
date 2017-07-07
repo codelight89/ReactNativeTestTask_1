@@ -5,7 +5,7 @@
 git clone https://github.com/codelight89/ReactNativeTestTask_1.git
 
 2. Enter in terminal:
-cd <path to the react-native project>
+cd ReactNativeTestTask_1
 
 3. Then install node modules:
 npm install
