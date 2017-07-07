@@ -15,16 +15,16 @@ const initialState = {
 };
 
 export default (_state = initialState, action = {}) => {
-
   const state = { ..._state };
-
   switch (action.type) {
-    case SET_USERNAME:
+    case SET_USERNAME: {
       state.username = action.data;
       break;
-    case AUTH_CLEAN:
+    }
+    case AUTH_CLEAN: {
       state.username = '';
       break;
+    }
     default:
       break;
   }

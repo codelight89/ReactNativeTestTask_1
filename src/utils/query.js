@@ -20,4 +20,5 @@ export async function imagesQuery() {
   } catch (error) {
     console.log('error ', error);
   }
+  return null;
 }

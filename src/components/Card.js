@@ -21,6 +21,14 @@ const styles = EStyleSheet.create({
 EStyleSheet.build();
 
 export default class Card extends Component {
+  static defaultProps = {
+    card: {},
+  };
+
+  static propTypes = {
+    card: React.PropTypes.object,
+  };
+
   constructor() {
     super();
     this.state = {
@@ -43,11 +51,3 @@ export default class Card extends Component {
     );
   }
 }
-
-Card.defaultProps = {
-  card: {},
-};
-
-Card.propTypes = {
-  card: React.PropTypes.object,
-};

@@ -58,6 +58,18 @@ const styles = EStyleSheet.create({
 EStyleSheet.build();
 
 class ApproveList extends Component {
+  static defaultProps = {
+    approvedImages: [],
+    disapprovedImages: [],
+    dispatch: () => {},
+  };
+
+  static propTypes = {
+    approvedImages: React.PropTypes.arrayOf(React.PropTypes.object),
+    disapprovedImages: React.PropTypes.arrayOf(React.PropTypes.object),
+    dispatch: () => {},
+  };
+
   constructor() {
     super();
     this.state = {
@@ -70,7 +82,12 @@ class ApproveList extends Component {
     Actions.login();
   }
 
+  goBack = () => {
+    Actions.pop();
+  }
+
   renderRows = (rowData, sectionId, rowId) => {
+    const { approvedImages } = this.props;
     return (
       <View style={styles.cell}>
         <Image
@@ -81,18 +98,14 @@ class ApproveList extends Component {
         <View style={styles.textLikesContainer}>
           <Text style={styles.text} lineBreakMode="tail" numberOfLines={1}>{rowData.data.title}</Text>
           <Image
-            source={(rowId > this.props.approvedImages.length - 1) ? dislikeIcon : likeIcon}
+            source={(rowId > approvedImages.length - 1) ? dislikeIcon : likeIcon}
             style={styles.icon}
             resizeMode="contain"
           />
         </View>
       </View>
     );
-  }
-
-  goBack = () => {
-    Actions.pop();
-  }
+  };
 
   render() {
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -105,7 +118,12 @@ class ApproveList extends Component {
         />
         <ListView
           style={styles.listView}
-          dataSource={ds.cloneWithRows((approvedImages.length > 0 || disapprovedImages.length > 0) ? approvedImages.concat(disapprovedImages) : [])}
+          dataSource={
+            ds.cloneWithRows((approvedImages.length > 0 || disapprovedImages.length > 0) ?
+              approvedImages.concat(disapprovedImages)
+            :
+              [])
+          }
           renderRow={this.renderRows}
           enableEmptySections
         />
@@ -113,18 +131,6 @@ class ApproveList extends Component {
     );
   }
 }
-
-ApproveList.defaultProps = {
-  approvedImages: [],
-  disapprovedImages: [],
-  dispatch: () => {},
-};
-
-ApproveList.propTypes = {
-  approvedImages: React.PropTypes.arrayOf(React.PropTypes.object),
-  disapprovedImages: React.PropTypes.arrayOf(React.PropTypes.object),
-  dispatch: () => {},
-};
 
 export default connect(state => ({
   approvedImages: state.images.approvedImages,

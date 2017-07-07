@@ -5,7 +5,6 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
-  Image,
 } from 'react-native';
 
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -75,29 +74,41 @@ const styles = EStyleSheet.create({
 EStyleSheet.build();
 
 class Header extends Component {
+  static defaultProps = {
+    username: '',
+    reddit: '',
+    absolute: false,
+    openListApprovedImages: () => {},
+    leftAction: () => {},
+    rightAction: () => {},
+  };
+
+  static propTypes = {
+    username: React.PropTypes.string,
+    reddit: React.PropTypes.string,
+    absolute: React.PropTypes.bool,
+    openListApprovedImages: React.PropTypes.func,
+    leftAction: React.PropTypes.func,
+    rightAction: React.PropTypes.func,
+  };
 
   render() {
     const { reddit, username, absolute } = this.props;
     return (
       <View style={absolute ? styles.absolute : styles.containerStyle}>
         <View style={styles.leftContainerStyle}>
-          {
-            (absolute) ?
-              <TouchableOpacity
-                style={styles.leftButtonStyle}
-                onPress={() => this.props.openListApprovedImages()}
-              >
-                <Text style={styles.buttonTitle}>List Images</Text>
-              </TouchableOpacity>
-            :
-              (this.props.rightAction) &&
-                <TouchableOpacity
-                  style={styles.leftButtonStyle}
-                  onPress={() => this.props.rightAction()}
-                >
-                  <Text style={styles.buttonTitle}>Back</Text>
-                </TouchableOpacity>
-          }
+          <TouchableOpacity
+            style={styles.leftButtonStyle}
+            onPress={() => {
+              if (absolute) {
+                this.props.openListApprovedImages();
+              } else {
+                this.props.rightAction();
+              }
+            }}
+          >
+            <Text style={styles.buttonTitle}>{(absolute) ? 'List Images' : 'Back'}</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.titleContainerSyle}>
           <Text style={styles.title}>{(absolute) ? reddit : username}</Text>
@@ -115,24 +126,6 @@ class Header extends Component {
     );
   }
 }
-
-Header.defaultProps = {
-  username: '',
-  reddit: '',
-  absolute: false,
-  openListApprovedImages: () => {},
-  leftAction: () => {},
-  rightAction: () => {},
-};
-
-Header.propTypes = {
-  username: React.PropTypes.string,
-  reddit: React.PropTypes.string,
-  absolute: React.PropTypes.bool,
-  openListApprovedImages: React.PropTypes.func,
-  leftAction: React.PropTypes.func,
-  rightAction: React.PropTypes.func,
-};
 
 export default connect(state => ({
   username: state.auth.username,

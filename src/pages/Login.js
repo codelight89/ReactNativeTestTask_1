@@ -52,16 +52,28 @@ const styles = EStyleSheet.create({
     fontSize: 15,
     color: colors.whiteColor,
   },
+  touchableView: {
+    flex: 1,
+  },
 });
 
 EStyleSheet.build();
 
 class Login extends Component {
+
+  static defaultProps = {
+    dispatch: () => {},
+  };
+
+  static propTypes = {
+    dispatch: () => {},
+  };
+
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      username: 'Test',
+      username: '',
       password: 'password',
     };
   }
@@ -98,7 +110,7 @@ class Login extends Component {
   render() {
     return (
       <TouchableWithoutFeedback
-        style={{ flex: 1 }}
+        style={styles.touchableView}
         onPress={() => Keyboard.dismiss()}
       >
         <View style={styles.mainContainer}>
@@ -138,11 +150,4 @@ class Login extends Component {
   }
 }
 
-Login.defaultProps = {
-  dispatch: () => {},
-};
-
-Login.propTypes = {
-  dispatch: () => {},
-};
 export default connect()(Login);

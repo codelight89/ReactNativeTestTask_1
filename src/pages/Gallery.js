@@ -52,14 +52,37 @@ const styles = EStyleSheet.create({
 EStyleSheet.build();
 
 class Gallery extends Component {
+
+  static defaultProps = {
+    images: [],
+    approvedImages: [],
+    disapprovedImages: [],
+    dispatch: () => {},
+  };
+
+  static propTypes = {
+    images: React.PropTypes.arrayOf(React.PropTypes.object),
+    approvedImages: React.PropTypes.arrayOf(React.PropTypes.object),
+    disapprovedImages: React.PropTypes.arrayOf(React.PropTypes.object),
+    dispatch: () => {},
+  };
+
   constructor(props) {
     super(props);
     this.state = {
     };
   }
 
-  openListApprovedImages = () => {
-    Actions.approvelist();
+  setApprovedOrDisapprovedImage = (cardIndex, flag) => {
+    const { images } = this.props;
+    if (flag === 'right') {
+      this.props.dispatch(imagesActions.setApprovedImage(images[cardIndex]));
+    } else {
+      this.props.dispatch(imagesActions.setDisapprovedImage(images[cardIndex]));
+    }
+    if (images[cardIndex + 1]) {
+      this.props.dispatch(imagesActions.setReddit(images[cardIndex + 1].data.name));
+    }
   }
 
   logOut = () => {
@@ -68,26 +91,20 @@ class Gallery extends Component {
     Actions.pop();
   }
 
+  openListApprovedImages = () => {
+    Actions.approvelist();
+  }
+
   render() {
     const { images, approvedImages, disapprovedImages } = this.props;
-    let listImages = images.filter(function(x) {
-      return approvedImages.indexOf(x) < 0;
-    });
-    listImages = listImages.filter(function(x) {
-      return disapprovedImages.indexOf(x) < 0;
-    });
+    let listImages = images.filter(x => approvedImages.indexOf(x) < 0);
+    listImages = listImages.filter(x => disapprovedImages.indexOf(x) < 0);
     return (
       <View style={styles.mainContainer}>
         <Swiper
           marginTop={80}
           cards={listImages}
-          renderCard={(card) => {
-            return (
-              <Card
-                card={(card) && card.data}
-              />
-            );
-          }}
+          renderCard={card => <Card card={(card) && card.data} />}
           overlayLabels={{
             left: {
               title: 'Nope',
@@ -105,22 +122,11 @@ class Gallery extends Component {
           onSwipedAll={() => Actions.approvelist()}
           cardIndex={0}
           backgroundColor={colors.whiteColor}
-          onSwipedRight={(cardIndex) => {
-            this.props.dispatch(imagesActions.setApprovedImage(images[cardIndex]));
-            if (images[cardIndex + 1]) {
-              this.props.dispatch(imagesActions.setReddit(images[cardIndex + 1].data.name));
-            }
-          }}
-          onSwipedLeft={(cardIndex) => {
-            this.props.dispatch(imagesActions.setDisapprovedImage(images[cardIndex]));
-            if (images[cardIndex + 1]) {
-              this.props.dispatch(imagesActions.setReddit(images[cardIndex + 1].data.name));
-            }
-          }}
+          onSwipedRight={cardIndex => this.setApprovedOrDisapprovedImage(cardIndex, 'right')}
+          onSwipedLeft={cardIndex => this.setApprovedOrDisapprovedImage(cardIndex, 'left')}
           disableTopSwipe
           disableBottomSwipe
-        >
-        </Swiper>
+        />
         <Header
           absolute
           openListApprovedImages={this.openListApprovedImages}
@@ -130,19 +136,7 @@ class Gallery extends Component {
     );
   }
 }
-Gallery.defaultProps = {
-  images: [],
-  approvedImages: [],
-  disapprovedImages: [],
-  dispatch: () => {},
-};
 
-Gallery.propTypes = {
-  images: React.PropTypes.arrayOf(React.PropTypes.object),
-  approvedImages: React.PropTypes.arrayOf(React.PropTypes.object),
-  disapprovedImages: React.PropTypes.arrayOf(React.PropTypes.object),
-  dispatch: () => {},
-};
 export default connect(state => ({
   images: state.images.images,
   approvedImages: state.images.approvedImages,

@@ -38,28 +38,33 @@ const initialState = {
 export default (_state = initialState, action = {}) => {
   const state = { ..._state };
   switch (action.type) {
-    case SET_IMAGES:
+    case SET_IMAGES: {
       state.images = action.data;
       break;
-    case SET_APPROVED_IMAGE:
+    }
+    case SET_APPROVED_IMAGE: {
       const appImages = state.approvedImages;
       appImages.push(action.data);
       state.approvedImages = appImages;
       break;
-    case SET_DISAPPROVED_IMAGE:
+    }
+    case SET_DISAPPROVED_IMAGE: {
       const disappImages = state.disapprovedImages;
       disappImages.push(action.data);
       state.disapprovedImages = disappImages;
       break;
-    case SET_REDDIT:
+    }
+    case SET_REDDIT: {
       state.reddit = action.data;
       break;
-    case CLEAN_IMAGES:
+    }
+    case CLEAN_IMAGES: {
       state.images = [];
       state.approvedImages = [];
       state.disapprovedImages = [];
       state.reddit = '';
       break;
+    }
     default:
       break;
   }
