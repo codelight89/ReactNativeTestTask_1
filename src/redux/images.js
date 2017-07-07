@@ -2,7 +2,6 @@ export const SET_IMAGES = 'SET_IMAGES';
 export const SET_APPROVED_IMAGE = 'SET_APPROVED_IMAGE';
 export const SET_DISAPPROVED_IMAGE = 'SET_DISAPPROVED_IMAGE';
 export const SET_REDDIT = 'SET_REDDIT';
-export const CLEAN_LIST_IMAGES = 'CLEAN_LIST_IMAGES';
 export const CLEAN_IMAGES = 'CLEAN_IMAGES';
 
 export const setImages = data => ({
@@ -27,10 +26,6 @@ export const setReddit = data => ({
 
 export const cleanImages = () => ({
   type: CLEAN_IMAGES,
-});
-
-export const cleanListImages = () => ({
-  type: CLEAN_LIST_IMAGES,
 });
 
 const initialState = {
@@ -64,12 +59,6 @@ export default (_state = initialState, action = {}) => {
       state.approvedImages = [];
       state.disapprovedImages = [];
       state.reddit = '';
-      break;
-    case CLEAN_LIST_IMAGES:
-      // const listImages = state.images.filter(function(x) {
-      //    return state.approvedImages.indexOf(x) < 0;
-      //  });
-      // state.images = listImages;
       break;
     default:
       break;

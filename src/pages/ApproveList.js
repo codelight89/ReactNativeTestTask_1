@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Actions } from 'react-native-router-flux';
 import Header from '../components/Header';
+import * as authActions from '../redux/auth';
 
 const displayWidth = Dimensions.get('window').width;
 const dislikeIcon = require('../resources/dislike_icon.png');
@@ -62,6 +63,11 @@ class ApproveList extends Component {
     };
   }
 
+  logOut = () => {
+    this.props.dispatch(authActions.cleanAuth());
+    Actions.login();
+  }
+
   renderRows = (rowData, sectionId, rowId) => {
     return (
       <View style={styles.cell}>
@@ -93,6 +99,7 @@ class ApproveList extends Component {
       <View style={styles.mainContainer}>
         <Header
           rightAction={this.goBack}
+          leftAction={this.logOut}
         />
         <ListView
           style={styles.listView}
@@ -108,11 +115,13 @@ class ApproveList extends Component {
 ApproveList.defaultProps = {
   approvedImages: [],
   disapprovedImages: [],
+  dispatch: () => {},
 };
 
 ApproveList.propTypes = {
   approvedImages: React.PropTypes.arrayOf(React.PropTypes.object),
   disapprovedImages: React.PropTypes.arrayOf(React.PropTypes.object),
+  dispatch: () => {},
 };
 
 export default connect(state => ({

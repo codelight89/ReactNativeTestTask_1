@@ -7,20 +7,16 @@ import {
 
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Spinner from 'react-native-loading-spinner-overlay';
+import colors from '../constants/colors';
 
 const styles = EStyleSheet.create({
   card: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: colors.whiteColor,
   },
   image: {
     flex: 1,
-  },
-  title: {
-    height: 50,
-    textAlign: 'center',
-    fontSize: 12,
   },
 });
 
@@ -38,7 +34,6 @@ export default class Card extends Component {
     const { card } = this.props;
     return (
       <View style={styles.card}>
-        <Spinner visible={this.state.loading} overlayColor={'transparent'} color={'gray'} />
         <Image
           style={styles.image}
           source={{ uri: card.thumbnail }}
@@ -46,7 +41,6 @@ export default class Card extends Component {
           onLoadStart={() => this.setState({ loading: true })}
           onLoadEnd={() => this.setState({ loading: false })}
         />
-        <Text style={styles.title}>{card.title}</Text>
       </View>
     );
   }

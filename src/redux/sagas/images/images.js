@@ -15,7 +15,9 @@ function* fetchImages(data) {
     const result = yield Query.imagesQuery();
     if (result && Array.isArray(result.data.children)) {
       yield put(imagesActions.setImages(result.data.children));
-      yield put(imagesActions.setReddit(result.kind));
+      if (result.data.children.length > 0) {
+        yield put(imagesActions.setReddit(result.data.children[0].data.name));
+      }
       data.callback(true);
     } else {
       data.callback(false);

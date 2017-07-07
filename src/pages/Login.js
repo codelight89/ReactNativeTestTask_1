@@ -20,6 +20,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import * as auth from '../redux/auth';
 import * as images from '../redux/sagas/images/images';
 
+import colors from '../constants/colors';
+
 const displayWidth = Dimensions.get('window').width;
 
 const styles = EStyleSheet.create({
@@ -44,11 +46,11 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
     borderRadius: 7,
     marginTop: 20,
-    backgroundColor: 'blue',
+    backgroundColor: colors.blueColor,
   },
   buttonTitle: {
     fontSize: 15,
-    color: 'white',
+    color: colors.whiteColor,
   },
 });
 
@@ -59,8 +61,8 @@ class Login extends Component {
     super(props);
     this.state = {
       loading: false,
-      username: 'Test',
-      password: 'password',
+      username: '',
+      password: '',
     };
   }
 
@@ -106,7 +108,7 @@ class Login extends Component {
               style={styles.textInput}
               placeholder={'Username'}
               underlineColorAndroid={'#00000000'}
-              onChangeText={(text) => this.setState({ username: text })}
+              onChangeText={text => this.setState({ username: text })}
               placeholderTextColor={'black'}
               value={this.state.username}
             />

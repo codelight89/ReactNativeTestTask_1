@@ -1,19 +1,19 @@
 import React from 'react';
 import {
   View,
-  Platform,
 } from 'react-native';
 import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Scene, Router, Actions } from 'react-native-router-flux';
+import { Scene, Router } from 'react-native-router-flux';
 import Login from '../pages/Login';
 import Gallery from '../pages/Gallery';
 import ApproveList from '../pages/ApproveList';
+import colors from '../constants/colors';
 
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: colors.whiteColor,
   },
 });
 

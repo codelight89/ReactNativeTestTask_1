@@ -10,6 +10,7 @@ import {
 
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { connect } from 'react-redux';
+import colors from '../constants/colors';
 
 const widthHeader = Dimensions.get('window').width;
 const heightContainers = (Platform.OS === 'ios') ? 70 : 50;
@@ -25,7 +26,7 @@ const styles = EStyleSheet.create({
   absolute: {
     width: widthHeader,
     height: heightContainers,
-    backgroundColor: 'blue',
+    backgroundColor: colors.blueColor,
     position: 'absolute',
     top: 0,
     left: 0,
@@ -58,15 +59,15 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    color: 'white',
+    color: colors.whiteColor,
     fontSize: 17,
   },
   subTitle: {
-    color: 'white',
+    color: colors.whiteColor,
     fontSize: 15,
   },
   buttonTitle: {
-    color: 'white',
+    color: colors.whiteColor,
     fontSize: 12,
   },
 });
@@ -105,7 +106,7 @@ class Header extends Component {
         <View style={styles.rightContainerStyle}>
           <TouchableOpacity
             style={styles.rightButtonStyle}
-            onPress={() => this.props.logOut()}
+            onPress={() => this.props.leftAction()}
           >
             <Text style={styles.buttonTitle}>Log Out</Text>
           </TouchableOpacity>
@@ -120,7 +121,7 @@ Header.defaultProps = {
   reddit: '',
   absolute: false,
   openListApprovedImages: () => {},
-  logOut: () => {},
+  leftAction: () => {},
   rightAction: () => {},
 };
 
@@ -129,7 +130,7 @@ Header.propTypes = {
   reddit: React.PropTypes.string,
   absolute: React.PropTypes.bool,
   openListApprovedImages: React.PropTypes.func,
-  logOut: React.PropTypes.func,
+  leftAction: React.PropTypes.func,
   rightAction: React.PropTypes.func,
 };
 

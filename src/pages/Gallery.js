@@ -15,6 +15,8 @@ import * as authActions from '../redux/auth';
 import Header from '../components/Header';
 import Card from '../components/Card';
 
+import colors from '../constants/colors';
+
 const displayWidth = Dimensions.get('window').width;
 
 const styles = EStyleSheet.create({
@@ -39,11 +41,11 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
     borderRadius: 7,
     marginTop: 20,
-    backgroundColor: 'blue',
+    backgroundColor: colors.blueColor,
   },
   buttonTitle: {
     fontSize: 15,
-    color: 'white',
+    color: colors.whiteColor,
   },
 });
 
@@ -57,23 +59,27 @@ class Gallery extends Component {
   }
 
   openListApprovedImages = () => {
-    this.props.dispatch(imagesActions.cleanListImages());
     Actions.approvelist();
   }
 
   logOut = () => {
-    this.props.dispatch(imagesActions.cleanImages());
     this.props.dispatch(authActions.cleanAuth());
     Actions.pop();
   }
 
   render() {
-    const { images } = this.props;
+    const { images, approvedImages, disapprovedImages } = this.props;
+    let listImages = images.filter(function(x) {
+      return approvedImages.indexOf(x) < 0;
+    });
+    listImages = listImages.filter(function(x) {
+      return disapprovedImages.indexOf(x) < 0;
+    });
     return (
       <View style={styles.mainContainer}>
         <Swiper
           marginTop={80}
-          cards={images}
+          cards={listImages}
           renderCard={(card) => {
             return (
               <Card
@@ -97,12 +103,18 @@ class Gallery extends Component {
           }}
           onSwipedAll={() => Actions.approvelist()}
           cardIndex={0}
-          backgroundColor={'white'}
+          backgroundColor={colors.whiteColor}
           onSwipedRight={(cardIndex) => {
             this.props.dispatch(imagesActions.setApprovedImage(images[cardIndex]));
+            if (images[cardIndex + 1]) {
+              this.props.dispatch(imagesActions.setReddit(images[cardIndex + 1].data.name));
+            }
           }}
           onSwipedLeft={(cardIndex) => {
             this.props.dispatch(imagesActions.setDisapprovedImage(images[cardIndex]));
+            if (images[cardIndex + 1]) {
+              this.props.dispatch(imagesActions.setReddit(images[cardIndex + 1].data.name));
+            }
           }}
           disableTopSwipe
           disableBottomSwipe
@@ -111,7 +123,7 @@ class Gallery extends Component {
         <Header
           absolute
           openListApprovedImages={this.openListApprovedImages}
-          logOut={this.logOut}
+          leftAction={this.logOut}
         />
       </View>
     );
@@ -119,13 +131,19 @@ class Gallery extends Component {
 }
 Gallery.defaultProps = {
   images: [],
+  approvedImages: [],
+  disapprovedImages: [],
   dispatch: () => {},
 };
 
 Gallery.propTypes = {
   images: React.PropTypes.arrayOf(React.PropTypes.object),
+  approvedImages: React.PropTypes.arrayOf(React.PropTypes.object),
+  disapprovedImages: React.PropTypes.arrayOf(React.PropTypes.object),
   dispatch: () => {},
 };
 export default connect(state => ({
   images: state.images.images,
+  approvedImages: state.images.approvedImages,
+  disapprovedImages: state.images.disapprovedImages,
 }))(Gallery);
