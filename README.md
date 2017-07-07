@@ -10,4 +10,4 @@ cd ReactNativeTestTask_1
 3. Then install node modules:
 npm install
 
-4. Open react-native project in Xcode or Android Studio.
+4. Open react-native project in Xcode or Android Studio and run app or run command for IOS - react-native run-ios, and Android - react-native run-android.
