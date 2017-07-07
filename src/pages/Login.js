@@ -74,7 +74,7 @@ class Login extends Component {
     this.state = {
       loading: false,
       username: '',
-      password: 'password',
+      password: '',
     };
   }
 
