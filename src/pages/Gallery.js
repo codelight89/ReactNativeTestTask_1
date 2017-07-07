@@ -63,6 +63,7 @@ class Gallery extends Component {
   }
 
   logOut = () => {
+    this.props.dispatch(imagesActions.cleanImages());
     this.props.dispatch(authActions.cleanAuth());
     Actions.pop();
   }

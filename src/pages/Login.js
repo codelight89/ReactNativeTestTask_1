@@ -61,8 +61,8 @@ class Login extends Component {
     super(props);
     this.state = {
       loading: false,
-      username: '',
-      password: '',
+      username: 'Test',
+      password: 'password',
     };
   }
 
@@ -128,7 +128,10 @@ class Login extends Component {
           >
             <Text style={styles.buttonTitle}>Log In</Text>
           </TouchableOpacity>
-          <KeyboardSpacer />
+          {
+            (Platform.OS === 'ios') &&
+              <KeyboardSpacer />
+          }
         </View>
       </TouchableWithoutFeedback>
     );

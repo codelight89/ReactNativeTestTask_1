@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
-  Image,
 } from 'react-native';
 
 import EStyleSheet from 'react-native-extended-stylesheet';
-import Spinner from 'react-native-loading-spinner-overlay';
+import FastImage from 'react-native-fast-image';
 import colors from '../constants/colors';
 
 const styles = EStyleSheet.create({
@@ -34,10 +32,10 @@ export default class Card extends Component {
     const { card } = this.props;
     return (
       <View style={styles.card}>
-        <Image
+        <FastImage
           style={styles.image}
           source={{ uri: card.thumbnail }}
-          resizeMode="contain"
+          resizeMode={FastImage.resizeMode.contain}
           onLoadStart={() => this.setState({ loading: true })}
           onLoadEnd={() => this.setState({ loading: false })}
         />

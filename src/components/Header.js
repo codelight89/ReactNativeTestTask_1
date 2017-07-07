@@ -100,8 +100,8 @@ class Header extends Component {
           }
         </View>
         <View style={styles.titleContainerSyle}>
-          <Text style={styles.title}>{reddit}</Text>
-          <Text style={styles.subTitle}>{username}</Text>
+          <Text style={styles.title}>{(absolute) ? reddit : username}</Text>
+          <Text style={styles.subTitle}>{(absolute) && username}</Text>
         </View>
         <View style={styles.rightContainerStyle}>
           <TouchableOpacity

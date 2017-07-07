@@ -13,6 +13,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { Actions } from 'react-native-router-flux';
 import Header from '../components/Header';
 import * as authActions from '../redux/auth';
+import * as imagesActions from '../redux/images';
 
 const displayWidth = Dimensions.get('window').width;
 const dislikeIcon = require('../resources/dislike_icon.png');
@@ -64,6 +65,7 @@ class ApproveList extends Component {
   }
 
   logOut = () => {
+    this.props.dispatch(imagesActions.cleanImages());
     this.props.dispatch(authActions.cleanAuth());
     Actions.login();
   }
